@@ -30,12 +30,11 @@ background-color: rgba(0, 0, 0, 0.7);
 """
 st.markdown(page_bg_img, unsafe_allow_html=True)
 
-# Load trained models
-diabetes_model = pickle.load(open(r'diabetes_model.sav', 'rb'))
-# heart_disease_model = pickle.load(open(r'heart_disease_model.sav', 'rb'))
-# parkinsons_model = pickle.load(open(r'parkinsons_model.sav', 'rb'))
-# lung_cancer_model = pickle.load(open(r'lungs_disease_model.sav', 'rb'))
-# thyroid_model = pickle.load(open(r'Thyroid_model.sav', 'rb'))
+uploaded_file = st.file_uploader("diabetes_model.sav", type="sav")
+
+if uploaded_file:
+    diabetes_model = pickle.load(uploaded_file)
+    st.success("Model loaded successfully!")
 
 # Sidebar Menu
 with st.sidebar:
@@ -80,7 +79,11 @@ if selected == "Diabetes Prediction":
         "Skin Thickness", "Insulin Level", "BMI", 
         "Diabetes Pedigree Function", "Age"
     ]
-    predict_disease(diabetes_model, diabetes_labels)
+    
+    if 'diabetes_model' in locals():  # Check if model is loaded
+        predict_disease(diabetes_model, diabetes_labels)
+    else:
+        st.warning("Please upload the model file before making predictions.")
 
 # # **Heart Disease Prediction**
 # if selected == "Heart Disease Prediction":
